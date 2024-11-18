@@ -20,7 +20,7 @@ export const Register = () => {
     };
 
     try {
-      const response = await fetch(`http://localhost:8000/register`, requestOptions);
+      const response = await fetch(`http://localhost:8000/users`, requestOptions);
       if (!response.ok) {
         throw new Error("Registration failed.");
       }
