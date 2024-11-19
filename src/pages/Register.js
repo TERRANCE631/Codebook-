@@ -1,16 +1,17 @@
-import { useState } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const Register = () => {
-  const [message, setMessage] = useState(null);
+  const token = localStorage.getItem("authToken");
 
   async function handleRegister(event) {
     event.preventDefault();
-    setMessage(null); 
 
     const authDetail = {
       name: event.target.name.value,
       email: event.target.email.value,
-      password: event.target.password.value
+      password: event.target.password.value,
+      token: event.target._token.value
     };
 
     const requestOptions = {
@@ -29,15 +30,16 @@ export const Register = () => {
       // Save the token from json-server-auth to localStorage
       if (data.accessToken) {
         localStorage.setItem("authToken", data.accessToken);
-        setMessage("Registration successful! Token has been saved.");
-      } else {
-        setMessage("Registration successful, but no token received.");
-      }
+        toast.success("Registration successful!");
 
-      console.log(data);
+        // Clear the form
+        event.target.reset();
+      } else {
+        toast.warn("Registration successful, but no token received.");
+      }
     } catch (error) {
       console.error("Error:", error);
-      setMessage("Registration failed. Please try again.");
+      toast.error("Registration failed. User with same email already exist.");
     }
   }
 
@@ -59,9 +61,12 @@ export const Register = () => {
           <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Your password</label>
           <input type="password" id="password" className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" required minLength="7" />
         </div>
+        <div className='hidden'>
+          <input type="text" id="_token" value={token} className="hidden" />
+        </div>
         <button type="submit" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Register</button>
       </form>
-      {message && <p className="mt-4 text-center text-sm font-medium">{message}</p>}
+      <ToastContainer />
     </main>
   );
 };
