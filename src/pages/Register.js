@@ -1,7 +1,10 @@
+import { useNavigate } from 'react-router-dom';
+
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export const Register = () => {
+  const navigate = useNavigate();
   const token = localStorage.getItem("authToken");
 
   async function handleRegister(event) {
@@ -34,6 +37,10 @@ export const Register = () => {
 
         // Clear the form
         event.target.reset();
+
+        setTimeout(() => {
+          navigate('/login');
+        }, 2000);
       } else {
         toast.warn("Registration successful, but no token received.");
       }
